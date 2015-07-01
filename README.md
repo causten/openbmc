@@ -6,7 +6,7 @@ OpenBMC uses [Yocto](https://www.yoctoproject.org) as the underlying building fr
 
 ## Contents
 
-This repository is a staging area to contribute back to the 'forked from' Facebook repository.  There are a few files that are incompatible with the existing Facebook (i.e. wiring of the Aspeed serial ports comared to wedge) code.  We would like to get those resolved but needed a place to put intermediate changes.  So here we are.  
+This repository is a staging area to contribute back to the 'forked from' Facebook repository.  There are a few files that are incompatible with the existing Facebook (i.e. wiring of the Aspeed serial ports compared to wedge) code.  We would like to get those resolved but needed a place to put intermediate changes.  So here we are.  
 
 * **OpenBMC Common Layer** - Common packages and recipes can be used in different types of BMC.
 * **BMC System-on-Chip (SoC) Layer** - SoC specific drivers and tools. This layer includes the bootloader (u-boot) and the Linux kernel. Both the bootloader and Linux kernel shall include the hardware drivers specific for the SoC.
