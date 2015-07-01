@@ -6,7 +6,7 @@ OpenBMC uses [Yocto](https://www.yoctoproject.org) as the underlying building fr
 
 ## Contents
 
-This repository includes 3 set of layers:
+This repository is a staging area to contribute back to the 'forked from' Facebook repository.  There are a few files that are incompatible with the existing Facebook (i.e. wiring of the Aspeed serial ports comared to wedge) code.  We would like to get those resolved but needed a place to put intermediate changes.  So here we are.  
 
 * **OpenBMC Common Layer** - Common packages and recipes can be used in different types of BMC.
 * **BMC System-on-Chip (SoC) Layer** - SoC specific drivers and tools. This layer includes the bootloader (u-boot) and the Linux kernel. Both the bootloader and Linux kernel shall include the hardware drivers specific for the SoC.
@@ -33,13 +33,13 @@ $ git clone -b daisy https://git.yoctoproject.org/git/poky
 ```
 $ cd poky
 $ git clone -b daisy https://github.com/openembedded/meta-openembedded.git
-$ git clone git@github.com:facebook/openbmc.git meta-openbmc
+$ git clone git@github.com:causten/openbmc.git meta-openbmc
 ```
 
 * Step 3 - Initialize a build directory. In `poky` directory,
 
 ```
-$ export TEMPLATECONF=meta-openbmc/meta-facebook/meta-wedge/conf
+$ export TEMPLATECONF=meta-openbmc/meta-ibm/meta-palmetto/conf
 $ source oe-init-build-env
 ```
 
@@ -48,15 +48,15 @@ After this step, you will be dropped into a build directory, `poky/build`.
 * Step 4 - Start the build within the build directory, `poky/build`.
 
 ```
-$ bitbake wedge-image
+$ bitbake palmetto-image
 ```
 
-The build process automatically fetches all necessary packages and build the complete image. The final build results are in `poky/build/tmp/deploy/images/wedge`.
+The build process automatically fetches all necessary packages and build the complete image. The final build results are in `poky/build/tmp/deploy/images/palmetto`.
 
 * u-boot.bin - This is the u-boot image for the board.
 * uImage - This the Linux kernel for the board.
-* wedge-image-wedge.cpio.lzma.u-boot - This is the rootfs for the board
-* flash-wedge - This is the complete flash image including u-boot, kernel, and the rootfs.
+* palmetto-image-palmetto.cpio.lzma.u-boot - This is the rootfs for the board
+* flash-palmetto - This is the complete flash image including u-boot, kernel, and the rootfs.
 
 # How can I contribute
 
