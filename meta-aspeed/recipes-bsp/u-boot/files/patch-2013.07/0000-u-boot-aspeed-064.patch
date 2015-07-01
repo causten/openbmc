@@ -41303,7 +41303,7 @@ index 0000000..678e7c3
 +* 3: Reserved
 +*-------------------------------------------------------------------------------
 +*/
-+#define CONFIG_MAC1_PHY_SETTING		0
++#define CONFIG_MAC1_PHY_SETTING		2
 +#define CONFIG_MAC2_PHY_SETTING		0
 +#define CONFIG_MAC_INTERFACE_CLOCK_DELAY	0x2255
 +#define CONFIG_NET_MULTI

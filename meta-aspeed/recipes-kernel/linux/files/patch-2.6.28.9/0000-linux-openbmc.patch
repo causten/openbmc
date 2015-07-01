@@ -2046,22 +2046,6 @@ index 6d7d7f47..f9125a1 100755
  
 - extern void ast_soc_wdt_reset(void);
 + extern void ast_wdt_reset_full(void);
-diff --git a/arch/arm/mach-aspeed/include/mach/debug-macro.S b/arch/arm/mach-aspeed/include/mach/debug-macro.S
-index 0b7c927..ff3195a 100644
---- a/arch/arm/mach-aspeed/include/mach/debug-macro.S
-+++ b/arch/arm/mach-aspeed/include/mach/debug-macro.S
-@@ -13,9 +13,8 @@
- 	.macro	addruart, rx, tmp
- 	mrc 	p15, 0, \rx, c1, c0
- 	tst 	\rx, #1 								@ MMU enabled?
--	ldreq	\rx, =AST_UART0_BASE
--	ldrne	\rx, =IO_ADDRESS(AST_UART0_BASE)
--	orr 	\rx, \rx, #0x00012000
-+	ldreq   \rx, =AST_UART3_BASE
-+	ldrne	\rx, =IO_ADDRESS(AST_UART3_BASE)
- 	.endm
- 	
- #define UART_SHIFT      2
 diff --git a/arch/arm/mach-aspeed/include/mach/system.h b/arch/arm/mach-aspeed/include/mach/system.h
 index 96e90da..926268b 100644
 --- a/arch/arm/mach-aspeed/include/mach/system.h
@@ -2075,21 +2059,6 @@ index 96e90da..926268b 100644
  #endif
  }
  
-diff --git a/arch/arm/mach-aspeed/include/mach/uncompress.h b/arch/arm/mach-aspeed/include/mach/uncompress.h
-index 896b854..80e560d 100644
---- a/arch/arm/mach-aspeed/include/mach/uncompress.h
-+++ b/arch/arm/mach-aspeed/include/mach/uncompress.h
-@@ -12,8 +12,8 @@
- #include <mach/platform.h>
- #include <mach/aspeed_serial.h>
- 
--#define UART_PUT_CHAR   (*(volatile unsigned char *)(AST_UART0_BASE + UART_THR))
--#define UART_GET_LSR   (*(volatile unsigned char *)(AST_UART0_BASE + UART_LSR))
-+#define UART_PUT_CHAR   (*(volatile unsigned char *)(AST_UART3_BASE + UART_THR))
-+#define UART_GET_LSR   (*(volatile unsigned char *)(AST_UART3_BASE + UART_LSR))
- 
- static void putc(int c)
- {
 diff --git a/arch/arm/mach-aspeed/include/mach/vmalloc.h b/arch/arm/mach-aspeed/include/mach/vmalloc.h
 index 3706cf1..51912ae 100644
 --- a/arch/arm/mach-aspeed/include/mach/vmalloc.h
@@ -11551,119 +11520,6 @@ index 45cb05a..10450cd 100644
  			}
  		}
  	} else
-diff --git a/drivers/net/ftgmac100_26.c b/drivers/net/ftgmac100_26.c
-index 8575293..fdc77fc 100644
---- a/drivers/net/ftgmac100_26.c
-+++ b/drivers/net/ftgmac100_26.c
-@@ -120,6 +120,8 @@
- #err "Not define include for GMAC"
- #endif
- 
-+#define PHY_DEFAULT_ADDR 0x1F
-+
- /*------------------------------------------------------------------------
-  .
-  . Configuration options, for the experienced user to change.
-@@ -269,9 +271,11 @@ no_phy_access:
- 		if (out->miiPhyId == 0xFFFF) { //Realtek PHY at address 1
- 			out->phyAddr = 1;
- 		}
-+#if 0
- 		if (out->miiPhyId == 0x0362) { 
- 			out->phyAddr = 1;
- 		}
-+#endif
- 		out->miiPhyId = ftgmac100_read_phy_register(dev->base_addr, out->phyAddr, 0x02);
- 		out->miiPhyId = (out->miiPhyId & 0xffff) << 16;
- 		out->miiPhyId |= ftgmac100_read_phy_register(dev->base_addr, out->phyAddr, 0x03) & 0xffff;
-@@ -280,7 +284,7 @@ no_phy_access:
- 		case 0x0040:	// Broadcom
- 		case 0x0141:	// Marvell
- 		case 0x001c:	// Realtek
--		case 0x0362:	// BCM54612
-+		case 0x0362:	// BCM54612, BCM54616
- 		break;
- 
- 		default:
-@@ -334,7 +338,8 @@ static void ftgmac100_reset( struct net_device* dev )
- 	    speed  = (tmp & PHY_SPEED_mask)>>14;
- 	    netif_carrier_on(dev);
- 	}
--	else if (priv->ids.miiPhyId == PHYID_BCM54612E) { 
-+	else if (priv->ids.miiPhyId == PHYID_BCM54612E
-+		 || priv->ids.miiPhyId == PHYID_BCM54616S) { 
-        // Get link status
-         // First Switch shadow register selector
-         ftgmac100_write_phy_register(dev->base_addr, priv->ids.phyAddr, 0x1C, 0x2000);
-@@ -558,7 +563,8 @@ Re_Get_Link_Status:
-         	,dev->base_addr + IER_REG
-        	 	);
- 	}
--	else if (priv->ids.miiPhyId == PHYID_BCM54612E) { 
-+	else if (priv->ids.miiPhyId == PHYID_BCM54612E
-+		 || priv->ids.miiPhyId == PHYID_BCM54616S) { 
-         outl(
- // no link PHY link status pin            PHYSTS_CHG_bit      |
-             AHB_ERR_bit         |
-@@ -612,7 +618,8 @@ static void aspeed_mac_timer(unsigned long data)
- 	    duplex = (tmp & PHY_DUPLEX_mask)>>13;
- 	    speed  = (tmp & PHY_SPEED_mask)>>14;
- 	}
--	else if (priv->ids.miiPhyId == PHYID_BCM54612E) { 
-+	else if (priv->ids.miiPhyId == PHYID_BCM54612E
-+		 || priv->ids.miiPhyId == PHYID_BCM54616S) { 
- 	    // Get link status
- 	    // First Switch shadow register selector
- 	    ftgmac100_write_phy_register(dev->base_addr, priv->ids.phyAddr, 0x1C, 0x2000);
-@@ -913,6 +920,7 @@ static void ftgmac100_phy_configure(struct net_device* dev)
- 		case PHYID_VENDOR_BROADCOM:
- 			switch (priv->ids.miiPhyId) {
- 				case PHYID_BCM54612E:
-+				case PHYID_BCM54616S:
- 					ftgmac100_write_phy_register(ioaddr, priv->ids.phyAddr, 0x1C, 0x8C00); // Disable GTXCLK Clock Delay Enable
- 					ftgmac100_write_phy_register(ioaddr, priv->ids.phyAddr, 0x18, 0xF0E7); // Disable RGMII RXD to RXC Skew
- 					break;			
-@@ -1303,7 +1311,8 @@ static irqreturn_t ftgmac100_interrupt(int irq, void * dev_id,  struct pt_regs *
- 			// Bits [3:1] are {duplex, speed, link} change interrupts.
- 			tmp &= 0x000e;
- 		    }
--		    else if (priv->ids.miiPhyId == PHYID_BCM54612E) { 
-+		    else if (priv->ids.miiPhyId == PHYID_BCM54612E
-+			     || priv->ids.miiPhyId == PHYID_BCM54616S) { 
-                 tmp = ftgmac100_read_phy_register(ioaddr, priv->ids.phyAddr, 0x1A);
-                 PRINTK("%s: PHY interrupt status, read_phy_reg(0x1A) = 0x%04x\n",
-                     dev->name, tmp);
-@@ -1644,7 +1653,8 @@ static int ftgmac100_open(struct net_device *netdev)
- 
- 	if (((priv->ids.miiPhyId & PHYID_VENDOR_MASK) == PHYID_VENDOR_BROADCOM) || 
- 	    ((priv->ids.miiPhyId & PHYID_VENDOR_MODEL_MASK) == PHYID_RTL8201EL) ||
--        (priv->ids.miiPhyId == PHYID_BCM54612E)) { 
-+        (priv->ids.miiPhyId == PHYID_BCM54612E) ||
-+	(priv->ids.miiPhyId == PHYID_BCM54616S)) { 
- 
-         init_timer(&priv->timer);
- 	    priv->timer.data = (unsigned long)netdev;
-diff --git a/drivers/net/ftgmac100_26.h b/drivers/net/ftgmac100_26.h
-index f145b05..0d47024 100644
---- a/drivers/net/ftgmac100_26.h
-+++ b/drivers/net/ftgmac100_26.h
-@@ -62,7 +62,7 @@
- 
- 
- // --------------------------------------------------------------------
--//		ISR_REG ¤Î IMR_REG 
-+//    ISR_REG / IMR_REG
- // --------------------------------------------------------------------
- #define HPTXBUF_UNAVA_bit	(1UL<<10)
- #define PHYSTS_CHG_bit		(1UL<<9)
-@@ -473,6 +473,7 @@ typedef struct
- #define PHYID_RTL8211                   0x001cc910
- #define PHYID_RTL8211E                  0x001cc915
- #define PHYID_BCM54612E             	0x03625E6A
-+#define PHYID_BCM54616S			0x03625D12
- 
- 
- /* store this information for the driver.. */
 diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
 index dd4cd5a..6c7fe6b 100644
 --- a/drivers/usb/gadget/Kconfig

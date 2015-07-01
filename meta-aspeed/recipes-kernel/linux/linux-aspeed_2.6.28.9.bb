@@ -6,6 +6,7 @@ SRCREV = "1e85856853e24e9013d142adaad38c2adc7e48ac"
 PV = "2.6.28.9"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git;protocol=https;branch=linux-2.6.28.y \
+           file://patch-2.6.28.9/0000-ftgmac100_26.patch \
            file://patch-2.6.28.9/0000-linux-aspeed-064.patch \
            file://patch-2.6.28.9/0000-linux-openbmc.patch \
            file://patch-2.6.28.9/0001-MTD-fix-m25p80-64-bit-divisions.patch \

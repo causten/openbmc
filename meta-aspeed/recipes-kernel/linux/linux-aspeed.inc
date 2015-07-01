@@ -11,16 +11,17 @@ do_compile[depends] = "libgcc:do_populate_sysroot"
 inherit kernel
 
 # auto load the following modules
-module_autoload_tun = "tun"
-module_autoload_at24 = "at24"
-module_autoload_ads7828 = "ads7828"
-module_autoload_pcf8574 = "pcf8574"
-module_autoload_max127 = "max127"
-module_conf_max127 = "options max127 scaling=24414"
-module_autoload_pmbus_core = "pmbus_core"
-module_autoload_pfe1100 = "pfe1100"
-module_autoload_fb_panther_plus = "fb_panther_plus"
-module_autoload_adm1275 = "adm1275"
+#module_autoload_tun = "tun"
+#module_autoload_at24 = "at24"
+#module_autoload_ads7828 = "ads7828"
+#module_autoload_pcf8574 = "pcf8574"
+#module_autoload_max127 = "max127"
+#module_conf_max127 = "options max127 scaling=24414"
+#module_autoload_pmbus_core = "pmbus_core"
+#module_autoload_pfe1100 = "pfe1100"
+#module_autoload_fb_panther_plus = "fb_panther_plus"
+#module_autoload_adm1275 = "adm1275"
+module_autoload_ftgmac100_26 = "ftgmac100_26"
 
 # Do not install kernel in rootfs
 do_install[postfuncs] += "remove_kernel_image_from_rootfs"
