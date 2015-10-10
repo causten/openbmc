@@ -1685,8 +1685,8 @@ index 0000000..6bb7639
 +#define CONFIG_BOOTDELAY	3		/* autoboot after 3 seconds	*/
 +#define CONFIG_AUTOBOOT_KEYED
 +#define CONFIG_AUTOBOOT_PROMPT		\
-+	"autoboot in %d seconds (stop with 'Delete' key)...\n", bootdelay
-+#define CONFIG_AUTOBOOT_STOP_STR	"\x1b\x5b\x33\x7e" /* 'Delete', ESC[3~ */
++	"autoboot in %d seconds (stop with 'q' key)...\n", bootdelay
++#define CONFIG_AUTOBOOT_STOP_STR	"\x71" /* 'q' key */
 +#define CONFIG_ZERO_BOOTDELAY_CHECK
 +
 +#ifdef CONFIG_FLASH_AST2300
@@ -1842,10 +1842,10 @@ index 0000000..6bb7639
 +#define CONFIG_SYS_NS16550_COM2		0x1e784000
 +#define CONFIG_SYS_NS16550_COM3		0x1e78e000
 +#define	CONFIG_SYS_LOADS_BAUD_CHANGE
-+#define CONFIG_CONS_INDEX		3
++#define CONFIG_CONS_INDEX		2
 +#define CONFIG_BAUDRATE			57600
 +#define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
-+#define CONFIG_ASPEED_COM 0x1e784000 // UART5
++#define CONFIG_ASPEED_COM CONFIG_SYS_NS16550_COM2  // UART5
 +#define CONFIG_ASPEED_COM_IER (CONFIG_ASPEED_COM + 0x4)
 +#define CONFIG_ASPEED_COM_IIR (CONFIG_ASPEED_COM + 0x8)
 +#define CONFIG_ASPEED_COM_LCR (CONFIG_ASPEED_COM + 0xc)
